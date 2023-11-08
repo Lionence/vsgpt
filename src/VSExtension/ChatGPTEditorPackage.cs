@@ -1,14 +1,12 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Lionence.VSGPT.Commands;
-using Lionence.VSGPT.Window;
+using Lionence.VSGPT.Windows;
 using Microsoft.VisualStudio.Shell;
 using System;
-using System.IO.Packaging;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace Lionence.VSGPT
 {
@@ -19,23 +17,29 @@ namespace Lionence.VSGPT
     public sealed class ChatGPTEditorPackage : AsyncPackage
     {
         public const string PackageGuidString = "a2373120-2267-47f1-8236-3154f8e6aa88";
+        private WindowEvents _windowEvents;
+        private ChatGPTCommand _command;
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            await ChatGPTCommand.InitializeAsync(this);
+            _command = await ChatGPTCommand.InitializeAsync(this);
 
             var dte = await this.GetServiceAsync<DTE, DTE2>();
-            var vsEvents = dte.Events;
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
-            vsEvents.DocumentEvents.DocumentOpened += HandleDocumentOpened;
+            _windowEvents = dte.Events.WindowEvents;
+            _windowEvents.WindowActivated += HandleWindowActivated;
         }
 
-        /// Runs when a document is opened
-        private static void HandleDocumentOpened(Document document)
+        private void HandleWindowActivated(Window windowInFocus, EnvDTE.Window windowLostFocus)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            MessageBox.Show(document.FullName);
+
+            if (windowInFocus.Document != null)
+            {
+                var control = this.GetService<ChatGPTEditorWindow, IChatGPTEditorWindow>().Control;
+                control.ReadFile(windowInFocus.Document.FullName);
+            }
         }
     }
 }

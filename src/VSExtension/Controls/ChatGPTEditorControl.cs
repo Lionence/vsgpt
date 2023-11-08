@@ -3,18 +3,25 @@ using System.Windows.Controls;
 
 namespace Lionence.VSGPT.Control
 {
-    public partial class ChatGPTEditorControl : UserControl
+    public sealed partial class ChatGPTEditorControl : UserControl
     {
+        private string FileContent { get; set; } = string.Empty;
+        private string FileName { get; set; } = string.Empty;
+
         public ChatGPTEditorControl()
         {
             InitializeComponent();
         }
 
-        private void Button1_Click(object sender, RoutedEventArgs e)
+        public void ReadFile(string filePath)
         {
-            MessageBox.Show(
-                string.Format(System.Globalization.CultureInfo.CurrentUICulture, "Invoked '{0}'", this.ToString()),
-                "ToolWindow1");
+            FileNameLabel.Content = filePath;
+            FileContent = System.IO.File.ReadAllText(filePath);
+        }
+
+        private void GenerateButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
