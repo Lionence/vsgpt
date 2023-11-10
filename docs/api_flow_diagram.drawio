@@ -1,0 +1,93 @@
+<mxfile host="app.diagrams.net" modified="2023-11-10T11:38:41.306Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="0kVhXXgWvrMkPUwM5xEH" version="22.1.0" type="device">
+  <diagram name="1 oldal" id="54SB-Y210paGUx1GDGjb">
+    <mxGraphModel dx="3257" dy="1860" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#E3F5FF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-42" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="1030" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-41" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="1030" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="2" value="Computer" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" parent="1" vertex="1">
+          <mxGeometry x="50" y="170" width="150" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Assistant" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" parent="1" vertex="1">
+          <mxGeometry x="250" y="170" width="150" height="750" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="CREATE | REQ1" style="verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=horizontal;curved=0;rounded=0;" parent="1" source="2" target="3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="235" y="277" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6" value="Response RES1" style="verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;" parent="1" source="3" target="2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="235" y="329" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-14" value="&lt;div style=&quot;color: rgb(0, 0, 0); background-color: rgb(255, 255, 254); font-weight: normal; font-size: 12px; line-height: 18px;&quot;&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;{&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #0451a5;&quot;&gt;&quot;Jani&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;model&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #0451a5;&quot;&gt;&quot;gpt-4-1106-preview&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;instructions&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #0451a5;&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;,&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;tools&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;[&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;{&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #0451a5;&quot;&gt;&quot;code_interpreter&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;},&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;{&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #0451a5;&quot;&gt;&quot;retrieval&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;]&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="494" y="220" width="256" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-17" value="REQ1&lt;br&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;Http/POST&amp;nbsp;https://api.openai.com/v1/assistants&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="464" y="180" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-18" value="MODIFY | REQ2" style="verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="235" y="700" />
+            </Array>
+            <mxPoint x="125" y="700" as="sourcePoint" />
+            <mxPoint x="325" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-19" value="Response RES2" style="verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=horizontal;curved=0;rounded=0;dashed=1;dashPattern=2 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="235" y="752" />
+            </Array>
+            <mxPoint x="325" y="752" as="sourcePoint" />
+            <mxPoint x="125" y="752" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-20" value="REQ2&lt;br&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;Http/POST&amp;nbsp;https://api.openai.com/v1/assistants/&amp;lt;ID&amp;gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="670" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-21" value="&lt;div style=&quot;color: rgb(0, 0, 0); background-color: rgb(255, 255, 254); font-weight: normal; font-size: 12px; line-height: 18px;&quot;&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;{&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #a31515;&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span style=&quot;color: #000000;&quot;&gt;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: #0451a5;&quot;&gt;&quot;Jani2&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #000000;&quot;&gt;}&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="515" y="710" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-22" value="RES1&#xa;{&#xa;    &quot;id&quot;: &quot;asst_MQ4JINpUCLKTlLaeJGJiDPzN&quot;,&#xa;    &quot;object&quot;: &quot;assistant&quot;,&#xa;    &quot;created_at&quot;: 1699614888,&#xa;    &quot;name&quot;: &quot;Jani&quot;,&#xa;    &quot;description&quot;: null,&#xa;    &quot;model&quot;: &quot;gpt-4-1106-preview&quot;,&#xa;    &quot;instructions&quot;: &quot;&quot;,&#xa;    &quot;tools&quot;: [&#xa;        {&#xa;            &quot;type&quot;: &quot;code_interpreter&quot;&#xa;        },&#xa;        {&#xa;            &quot;type&quot;: &quot;retrieval&quot;&#xa;        }&#xa;    ],&#xa;    &quot;file_ids&quot;: [],&#xa;    &quot;metadata&quot;: {}&#xa;}" style="text;whiteSpace=wrap;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="770" y="210" width="270" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-23" value="RES2&#xa;{&#xa;    &quot;id&quot;: &quot;asst_MQ4JINpUCLKTlLaeJGJiDPzN&quot;,&#xa;    &quot;object&quot;: &quot;assistant&quot;,&#xa;    &quot;created_at&quot;: 1699614888,&#xa;    &quot;name&quot;: &quot;Jani2&quot;,&#xa;    &quot;description&quot;: null,&#xa;    &quot;model&quot;: &quot;gpt-4-1106-preview&quot;,&#xa;    &quot;instructions&quot;: &quot;&quot;,&#xa;    &quot;tools&quot;: [&#xa;        {&#xa;            &quot;type&quot;: &quot;code_interpreter&quot;&#xa;        },&#xa;        {&#xa;            &quot;type&quot;: &quot;retrieval&quot;&#xa;        }&#xa;    ],&#xa;    &quot;file_ids&quot;: [],&#xa;    &quot;metadata&quot;: {}&#xa;}" style="text;whiteSpace=wrap;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="770" y="610" width="280" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-36" value="Thread" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" vertex="1" parent="1">
+          <mxGeometry x="250" y="910" width="150" height="750" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-37" value="Computer" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" vertex="1" parent="1">
+          <mxGeometry x="50" y="910" width="150" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-38" value="CREATE" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=36;" vertex="1" parent="1">
+          <mxGeometry x="430" y="10" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-40" value="DELETE" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=36;" vertex="1" parent="1">
+          <mxGeometry x="1630" y="20" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-43" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="110" width="1030" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-44" value="Computer" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="140" width="150" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="R3KVl7gJMCTaAPqwiS7X-45" value="Assistant" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="140" width="150" height="750" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
