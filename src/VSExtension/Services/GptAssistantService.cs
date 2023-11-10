@@ -4,18 +4,9 @@ using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Services
 {
-    public class GptAssistantService
+    public class GptAssistantService : BaseGptService
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _apiKey; // Your OpenAI API key
-
-        public GptAssistantService(string apiKey)
-        {
-            _httpClient = new HttpClient();
-            _apiKey = apiKey;
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
-            _httpClient.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
-        }
+        public GptAssistantService(string apiKey) : base(apiKey) { }
 
         public async Task<string> CreateAssistant(string model, string name, string description, string instructions, string[] tools)
         {
