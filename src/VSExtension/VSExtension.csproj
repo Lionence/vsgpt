@@ -53,7 +53,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\IChatGPTCommand.cs" />
+    <Compile Include="Controls\Converters\WidthConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\GptAssistantService.cs" />
     <Compile Include="Windows\ChatGPTEditorWindow.cs" />
     <Compile Include="Commands\ChatGPTCommand.cs" />
     <Compile Include="Controls\ChatGPTEditorControl.cs">

@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Commands
 {
-    /// <summary>
-    /// Command handler
-    /// </summary>
     internal sealed class ChatGPTCommand : IChatGPTCommand
     {
         private static Guid _CommandSet => new Guid("35477f6e-e7c2-4b67-a2f7-0f1a2bae42ec");
