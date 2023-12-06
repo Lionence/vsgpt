@@ -1,14 +1,16 @@
-﻿using System.Net.Http;
+﻿using Lionence.VSGPT.Models;
+using Newtonsoft.Json;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Services
 {
-    public class GptThreadService : BaseGptService
+    internal sealed class GptThreadService : BaseGptService<Thread>
     {
         public GptThreadService(string apiKey) : base(apiKey) { }
 
-        public async Task<string> CreateThread()
+        public override async ValueTask<Thread> CreateAsync(Thread data)
         {
             var response = await _httpClient.PostAsync("https://api.openai.com/v1/threads", new StringContent("", Encoding.UTF8, "application/json"));
 
@@ -16,45 +18,45 @@ namespace Lionence.VSGPT.Services
 
             var responseContent = await response.Content.ReadAsStringAsync();
             // Parse the response content if needed
-            return responseContent;
+            return JsonConvert.DeserializeObject<Thread>(responseContent);
         }
 
-        public async Task<string> RetrieveThread(string threadId)
+        public override async ValueTask<Thread> RetrieveAsync(string id)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{threadId}");
+            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{id}");
 
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
             // Parse the response content if needed
-            return responseContent;
+            return JsonConvert.DeserializeObject<Thread>(responseContent);
         }
 
-        public async Task<string> ModifyThread(string threadId, string metadata)
+        public override async ValueTask<Thread> ModifyAsync(Thread data)
         {
             var requestContent = new
             {
-                metadata
+                metadata = data.Metadata
             };
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/threads/{threadId}", new StringContent(requestContent.ToString(), Encoding.UTF8, "application/json"));
+            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/threads/{data.Id}", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
             // Parse the response content if needed
-            return responseContent;
+            return JsonConvert.DeserializeObject<Thread>(responseContent);
         }
 
-        public async Task<string> DeleteThread(string threadId)
+        public override async ValueTask<Thread> DeleteAsync(string id)
         {
-            var response = await _httpClient.DeleteAsync($"https://api.openai.com/v1/threads/{threadId}");
+            var response = await _httpClient.DeleteAsync($"https://api.openai.com/v1/threads/{id}");
 
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
             // Parse the response content if needed
-            return responseContent;
+            return JsonConvert.DeserializeObject<Thread>(responseContent);
         }
     }
 }

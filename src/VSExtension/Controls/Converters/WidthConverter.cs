@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Lionence.VSGPT.Controls.Converters
 {
-    public class WidthConverter : IValueConverter
+    internal class WidthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

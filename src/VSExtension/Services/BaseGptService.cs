@@ -1,8 +1,10 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Services
 {
-    public abstract class BaseGptService
+    internal abstract class BaseGptService<T>
+        where T : class, new()
     {
         protected readonly HttpClient _httpClient;
         protected readonly string _apiKey;
@@ -14,5 +16,10 @@ namespace Lionence.VSGPT.Services
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
             _httpClient.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
         }
+
+        public abstract ValueTask<T> CreateAsync(T data);
+        public abstract ValueTask<T> RetrieveAsync(string id);
+        public abstract ValueTask<T> ModifyAsync(T data);
+        public abstract ValueTask<T> DeleteAsync(string id);
     }
 }

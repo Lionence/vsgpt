@@ -16,7 +16,7 @@ namespace Lionence.VSGPT
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(ChatGPTEditorWindow))]
-    public sealed class ChatGPTEditorPackage : AsyncPackage
+    internal sealed class ChatGPTEditorPackage : AsyncPackage
     {
         public const string PackageGuidString = "a2373120-2267-47f1-8236-3154f8e6aa88";
         private WindowEvents _windowEvents;
