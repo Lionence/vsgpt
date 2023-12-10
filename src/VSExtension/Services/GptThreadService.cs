@@ -1,5 +1,8 @@
 ﻿using Lionence.VSGPT.Models;
+using Lionence.VSGPT.Services.Core;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,15 +24,20 @@ namespace Lionence.VSGPT.Services
             return JsonConvert.DeserializeObject<Thread>(responseContent);
         }
 
-        public override async ValueTask<Thread> RetrieveAsync(string id)
+        public override async ValueTask<Thread> RetrieveAsync(string projectGuid)
+            => (await ListAsync()).SingleOrDefault(
+                a => a.Metadata.ContainsKey("purpose") && a.Metadata["purpose"] == "vsgpt"
+                  && a.Metadata.ContainsKey("project") && a.Metadata["project"] == projectGuid);
+
+        public override async ValueTask<ICollection<Thread>> ListAsync()
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{id}");
+            var response = await _httpClient.GetAsync("https://api.openai.com/v1/threads/");
 
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
             // Parse the response content if needed
-            return JsonConvert.DeserializeObject<Thread>(responseContent);
+            return JsonConvert.DeserializeObject<ICollection<Thread>>(responseContent);
         }
 
         public override async ValueTask<Thread> ModifyAsync(Thread data)

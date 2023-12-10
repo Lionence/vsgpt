@@ -1,5 +1,8 @@
 ﻿using Lionence.VSGPT.Models;
+using Lionence.VSGPT.Services.Core;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,15 +26,19 @@ namespace Lionence.VSGPT.Services
             return JsonConvert.DeserializeObject<File>(responseContent);
         }
 
-        public override async ValueTask<File> RetrieveAsync(string id)
+        public override async ValueTask<File> RetrieveAsync(string file)
+            => (await ListAsync()).SingleOrDefault(
+                f => f.Purpose == "assistant" && f.Filename == file);
+
+        public override async ValueTask<ICollection<File>> ListAsync()
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/files/{id}");
+            var response = await _httpClient.GetAsync("https://api.openai.com/v1/files/");
 
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<File>(responseContent);
+            // Parse the response content if needed
+            return JsonConvert.DeserializeObject<ICollection<File>>(responseContent);
         }
 
         public override async ValueTask<File> ModifyAsync(File data)
@@ -58,19 +65,7 @@ namespace Lionence.VSGPT.Services
             return JsonConvert.DeserializeObject<File>(responseContent);
         }
 
-        public async Task<string> ListFiles(string purpose = null)
-        {
-            var queryParameters = purpose != null ? $"?purpose={purpose}" : "";
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/files{queryParameters}");
-
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            // Parse the response content if needed
-            return responseContent;
-        }
-
-        public async Task<string> UploadFile(string purpose, string fileContent)
+        public async Task<string> UploadFileAsync(string purpose, string fileContent)
         {
             var requestContent = new
             {
@@ -87,7 +82,7 @@ namespace Lionence.VSGPT.Services
             return responseContent;
         }
 
-        public async Task<string> RetrieveFileContent(string id)
+        public async Task<string> RetrieveFileContentAsync(string id)
         {
             var response = await _httpClient.GetAsync($"https://api.openai.com/v1/files/{id}/content");
 

@@ -5,7 +5,6 @@ namespace Lionence.VSGPT.Models
     internal sealed class Assistant
     {
         public string Id { get; set; }
-        public string Object { get; set; }
         public long CreatedAt { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

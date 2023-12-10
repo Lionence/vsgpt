@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lionence.VSGPT.Models
+namespace Lionence.VSGPT.Models.BuiltIn
 {
     internal sealed class TextContent
     {

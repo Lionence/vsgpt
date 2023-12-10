@@ -5,7 +5,6 @@ namespace Lionence.VSGPT.Models
     internal sealed class Message
     {
         public string Id { get; set; }
-        public string Object { get; set; }
         public long CreatedAt { get; set; }
         public string ThreadId { get; set; }
         public string Role { get; set; }

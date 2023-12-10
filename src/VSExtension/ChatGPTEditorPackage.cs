@@ -20,8 +20,9 @@ namespace Lionence.VSGPT
     {
         public const string PackageGuidString = "a2373120-2267-47f1-8236-3154f8e6aa88";
         private WindowEvents _windowEvents;
-        private ChatGPTCommand _command;
         private DTE2 _dte;
+        // Bugfix: w/o this GC deletes the command and the extension won't work
+        private ChatGPTCommand _command;
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {

@@ -53,24 +53,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\IChatGPTCommand.cs" />
+    <Compile Include="Controls\ChatGPTEditorControl.cs" />
     <Compile Include="Controls\Converters\WidthConverter.cs" />
+    <Compile Include="Models\BuiltIn\Function.cs" />
+    <Compile Include="Models\BuiltIn\RequiredAction.cs" />
+    <Compile Include="Models\Run.cs" />
     <Compile Include="Models\Assistant.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageContent.cs" />
-    <Compile Include="Models\TextContent.cs" />
+    <Compile Include="Models\BuiltIn\TextContent.cs" />
+    <Compile Include="Models\BuiltIn\SubmitToolOutputs.cs" />
     <Compile Include="Models\Thread.cs" />
+    <Compile Include="Models\BuiltIn\ToolCall.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\BaseGptService.cs" />
+    <Compile Include="Services\Core\BaseEmbeddedGptService.cs" />
+    <Compile Include="Services\Core\BaseGptService.cs" />
+    <Compile Include="Services\GptManagerService.cs" />
+    <Compile Include="Services\GptRunService.cs" />
     <Compile Include="Services\GptAssistantService.cs" />
     <Compile Include="Services\GptFileService.cs" />
     <Compile Include="Services\GptMessageService.cs" />
     <Compile Include="Services\GptThreadService.cs" />
+    <Compile Include="Services\Core\IGptService.cs" />
     <Compile Include="Windows\ChatGPTEditorWindow.cs" />
     <Compile Include="Commands\ChatGPTCommand.cs" />
-    <Compile Include="Controls\ChatGPTEditorControl.cs">
-      <DependentUpon>ChatGPTEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ChatGPTEditorPackage.cs" />
     <Compile Include="Windows\IChatGPTEditorWindow.cs" />
   </ItemGroup>

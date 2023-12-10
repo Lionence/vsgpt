@@ -1,12 +1,14 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Lionence.VSGPT.Models;
 using Newtonsoft.Json;
+using Lionence.VSGPT.Services.Core;
 
 namespace Lionence.VSGPT.Services
 {
-    internal sealed class GptMessageService : BaseGptService<Message>
+    internal sealed class GptMessageService : BaseEmbeddedGptService<Message, Thread>
     {
         public GptMessageService(string apiKey) : base(apiKey) { }
 
@@ -29,15 +31,26 @@ namespace Lionence.VSGPT.Services
             return JsonConvert.DeserializeObject<Message>(responseContent);
         }
 
-        public override async ValueTask<Message> RetrieveAsync(string id)
+        public override async ValueTask<Message> RetrieveAsync(string threadId, string messageId)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{id}");
+            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{threadId}/messages/${messageId}");
 
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
             // Parse the response content if needed
             return JsonConvert.DeserializeObject<Message>(responseContent);
+        }
+
+        public override async ValueTask<ICollection<Message>> ListAsync(string threadId)
+        {
+            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{threadId}/messages");
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            // Parse the response content if needed
+            return JsonConvert.DeserializeObject<ICollection<Message>>(responseContent);
         }
 
         public override async ValueTask<Message> ModifyAsync(Message data)

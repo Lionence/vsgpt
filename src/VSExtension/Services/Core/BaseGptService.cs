@@ -1,9 +1,10 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Lionence.VSGPT.Services
+namespace Lionence.VSGPT.Services.Core
 {
-    internal abstract class BaseGptService<T>
+    internal abstract class BaseGptService<T> : IGptService
         where T : class, new()
     {
         protected readonly HttpClient _httpClient;
@@ -21,5 +22,6 @@ namespace Lionence.VSGPT.Services
         public abstract ValueTask<T> RetrieveAsync(string id);
         public abstract ValueTask<T> ModifyAsync(T data);
         public abstract ValueTask<T> DeleteAsync(string id);
+        public abstract ValueTask<ICollection<T>> ListAsync();
     }
 }

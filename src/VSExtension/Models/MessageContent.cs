@@ -1,4 +1,6 @@
-﻿namespace Lionence.VSGPT.Models
+﻿using Lionence.VSGPT.Models.BuiltIn;
+
+namespace Lionence.VSGPT.Models
 {
     internal sealed class MessageContent
     {
