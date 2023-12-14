@@ -1,21 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Lionence.VSGPT.Services.Managers;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Services.Core
 {
-    internal abstract class BaseEmbeddedGptService<TObject, TParent> : IGptService
+    public abstract class BaseEmbeddedGptService<TObject, TParent> : IGptService
         where TObject : class, new()
         where TParent : class, new()
     {
         protected readonly HttpClient _httpClient;
-        protected readonly string _apiKey;
+        protected readonly ConfigManager _configManager;
 
-        public BaseEmbeddedGptService(string apiKey)
+        public BaseEmbeddedGptService(ConfigManager configManager)
         {
             _httpClient = new HttpClient();
-            _apiKey = apiKey;
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
+            _configManager = configManager;
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configManager}");
             _httpClient.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
         }
 

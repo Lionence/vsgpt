@@ -2,7 +2,7 @@
 
 namespace Lionence.VSGPT.Models
 {
-    internal sealed class Thread
+    public sealed class Thread
     {
         public string Id { get; set; }
         public long CreatedAt { get; set; }

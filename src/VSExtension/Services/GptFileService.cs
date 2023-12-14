@@ -1,17 +1,17 @@
 ﻿using Lionence.VSGPT.Models;
 using Lionence.VSGPT.Services.Core;
+using Lionence.VSGPT.Services.Managers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Services
 {
-    internal sealed class GptFileService : BaseGptService<File>
+    public sealed class GptFileService : BaseGptService<File>
     {
-        public GptFileService(string apiKey) : base(apiKey) { }
+        public GptFileService(ConfigManager configManager) : base(configManager) { }
 
         public override async ValueTask<File> CreateAsync(File data)
         {
@@ -26,9 +26,16 @@ namespace Lionence.VSGPT.Services
             return JsonConvert.DeserializeObject<File>(responseContent);
         }
 
-        public override async ValueTask<File> RetrieveAsync(string file)
-            => (await ListAsync()).SingleOrDefault(
-                f => f.Purpose == "assistant" && f.Filename == file);
+        public override async ValueTask<File> RetrieveAsync(string id)
+        {
+            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/files/{id}");
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            // Parse the response content if needed
+            return JsonConvert.DeserializeObject<File>(responseContent);
+        }
 
         public override async ValueTask<ICollection<File>> ListAsync()
         {

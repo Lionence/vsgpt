@@ -1,5 +1,6 @@
 ﻿using Lionence.VSGPT.Models;
 using Lionence.VSGPT.Services.Core;
+using Lionence.VSGPT.Services.Managers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Lionence.VSGPT.Services
 {
-    internal sealed class GptThreadService : BaseGptService<Thread>
+    public sealed class GptThreadService : BaseGptService<Thread>
     {
-        public GptThreadService(string apiKey) : base(apiKey) { }
+        public GptThreadService(ConfigManager configManager) : base(configManager) { }
 
         public override async ValueTask<Thread> CreateAsync(Thread data)
         {

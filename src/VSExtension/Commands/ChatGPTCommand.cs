@@ -1,4 +1,5 @@
-﻿using Lionence.VSGPT.Windows;
+﻿using Lionence.VSGPT.Services.Managers;
+using Lionence.VSGPT.Windows;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
@@ -12,7 +13,7 @@ namespace Lionence.VSGPT.Commands
 
         private readonly AsyncPackage _package;
 
-        private static int CommandId = 4129;
+        private readonly static int CommandId = 4129;
 
         public ChatGPTEditorWindow Window;
 
@@ -44,6 +45,9 @@ namespace Lionence.VSGPT.Commands
                         id: 0,
                         create: true,
                         cancellationToken: _package.DisposalToken)) as ChatGPTEditorWindow;
+                    Window.WorkflowManager = _package.GetService<WorkflowManager, WorkflowManager>();
+                    Window.FileManager = _package.GetService<FileManager, FileManager>();
+                    Window.ConfigManager = _package.GetService<ConfigManager, ConfigManager>();
 
                     if (Window is null || Window.Frame is null)
                     {

@@ -1,6 +1,6 @@
 ﻿namespace Lionence.VSGPT.Services.Core
 {
-    internal interface IGptService
+    public interface IGptService
     {
     }
 }

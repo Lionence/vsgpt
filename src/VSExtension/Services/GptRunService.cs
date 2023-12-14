@@ -6,12 +6,13 @@ using Lionence.VSGPT.Models;
 using System.Collections.Generic;
 using System;
 using Lionence.VSGPT.Services.Core;
+using Lionence.VSGPT.Services.Managers;
 
 namespace Lionence.VSGPT.Services
 {
-    internal sealed class GptRunService : BaseEmbeddedGptService<Run, Thread>
+    public sealed class GptRunService : BaseEmbeddedGptService<Run, Thread>
     {
-        public GptRunService(string apiKey) : base(apiKey) { }
+        public GptRunService(ConfigManager configManager) : base(configManager) { }
 
         public override async ValueTask<Run> CreateAsync(Run data)
         {

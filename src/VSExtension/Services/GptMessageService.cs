@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Lionence.VSGPT.Models;
 using Newtonsoft.Json;
 using Lionence.VSGPT.Services.Core;
+using Lionence.VSGPT.Services.Managers;
 
 namespace Lionence.VSGPT.Services
 {
-    internal sealed class GptMessageService : BaseEmbeddedGptService<Message, Thread>
+    public sealed class GptMessageService : BaseEmbeddedGptService<Message, Thread>, IMessageService
     {
-        public GptMessageService(string apiKey) : base(apiKey) { }
+        public GptMessageService(ConfigManager configManager) : base(configManager) { }
 
-        public override async ValueTask<Message> CreateAsync(Message data)
+
+        public async ValueTask<Message> CreateAsync(MessageRequest data)
         {
             var requestContent = new
             {
@@ -79,5 +82,8 @@ namespace Lionence.VSGPT.Services
             // Parse the response content if needed
             return JsonConvert.DeserializeObject<Message>(responseContent);
         }
+
+        public override ValueTask<Message> CreateAsync(Message data)
+            => throw new NotSupportedException("Use CreateAsync(MessageRequest data) instead!");
     }
 }

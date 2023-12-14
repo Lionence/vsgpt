@@ -1,16 +1,28 @@
-﻿using System.Windows;
+﻿using Lionence.VSGPT.Services.Managers;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lionence.VSGPT.Control
 {
     public sealed partial class ChatGPTEditorControl : UserControl
     {
+        private readonly WorkflowManager _workflowManager;
+        private readonly FileManager _fileManager;
+        private readonly ConfigManager _configManager;
+
         private string FileContent { get; set; } = string.Empty;
         private string FileName { get; set; } = string.Empty;
         private string RelativePath { get; set; } = string.Empty;
 
-        public ChatGPTEditorControl()
+        public ChatGPTEditorControl(WorkflowManager workflowManager,
+                                   FileManager fileManager,
+                                   ConfigManager configManager)
         {
+            _workflowManager = workflowManager;
+            _fileManager = fileManager;
+            _configManager = configManager;
+
+            _configManager.Load();
             InitializeComponent();
         }
 

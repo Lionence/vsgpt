@@ -1,6 +1,6 @@
 ﻿namespace Lionence.VSGPT.Models
 {
-    internal sealed class File
+    public sealed class File
     {
         public string Id { get; set; }
         public int Bytes { get; set; }

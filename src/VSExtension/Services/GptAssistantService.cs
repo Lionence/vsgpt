@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lionence.VSGPT.Models;
 using System.Collections.Generic;
-using System.Linq;
 using Lionence.VSGPT.Services.Core;
+using Lionence.VSGPT.Services.Managers;
 
 namespace Lionence.VSGPT.Services
 {
-    internal sealed class GptAssistantService : BaseGptService<Assistant>
+    public sealed class GptAssistantService : BaseGptService<Assistant>
     {
-        public GptAssistantService(string apiKey) : base(apiKey) { }
+        public GptAssistantService(ConfigManager configManager) : base(configManager) { }
 
         public override async ValueTask<Assistant> CreateAsync(Assistant data)
         {
@@ -26,10 +26,16 @@ namespace Lionence.VSGPT.Services
             return JsonConvert.DeserializeObject<Assistant>(responseContent);
         }
 
-        public override async ValueTask<Assistant> RetrieveAsync(string projectGuid)
-            => (await ListAsync()).SingleOrDefault(
-                a => a.Metadata.ContainsKey("purpose") && a.Metadata["purpose"] == "vsgpt"
-                  && a.Metadata.ContainsKey("project") && a.Metadata["project"] == projectGuid);
+        public override async ValueTask<Assistant> RetrieveAsync(string assistantId)
+        {
+            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/assistants/{assistantId}");
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Assistant>(responseContent);
+        }
 
         public override async ValueTask<Assistant> ModifyAsync(Assistant data)
         {
