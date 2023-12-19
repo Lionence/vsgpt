@@ -11,13 +11,13 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptAssistantService : BaseGptService<Assistant>
     {
-        public GptAssistantService(ConfigManager configManager) : base(configManager) { }
+        public GptAssistantService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
 
         public override async ValueTask<Assistant> CreateAsync(Assistant data)
         {
             var jsonString = JsonConvert.SerializeObject(data);
 
-            var response = await _httpClient.PostAsync("https://api.openai.com/v1/assistants", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync("https://api.openai.com/v1/assistants", new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -28,7 +28,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<Assistant> RetrieveAsync(string assistantId)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/assistants/{assistantId}");
+            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/assistants/{assistantId}");
 
             response.EnsureSuccessStatusCode();
 
@@ -41,7 +41,7 @@ namespace Lionence.VSGPT.Services
         {
             var jsonString = JsonConvert.SerializeObject(data);
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/assistants/{data.Id}", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/assistants/{data.Id}", new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -52,7 +52,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<Assistant> DeleteAsync(string id)
         {
-            var response = await _httpClient.DeleteAsync($"https://api.openai.com/v1/assistants/{id}");
+            var response = await GetHttpClient().DeleteAsync($"https://api.openai.com/v1/assistants/{id}");
 
             response.EnsureSuccessStatusCode();
 
@@ -63,7 +63,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<ICollection<Assistant>> ListAsync()
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/assistants/");
+            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/assistants/");
 
             response.EnsureSuccessStatusCode();
 

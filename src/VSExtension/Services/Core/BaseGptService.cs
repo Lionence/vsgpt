@@ -8,15 +8,21 @@ namespace Lionence.VSGPT.Services.Core
     public abstract class BaseGptService<T> : IGptService
         where T : class, new()
     {
-        protected readonly HttpClient _httpClient;
+        protected readonly IHttpClientFactory _httpClientFactory;
         protected readonly ConfigManager _configManager;
 
-        public BaseGptService(ConfigManager configManager)
+        public BaseGptService(ConfigManager configManager, IHttpClientFactory httpClientFactory)
         {
-            _httpClient = new HttpClient();
+            _httpClientFactory = httpClientFactory;
             _configManager = configManager;
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configManager.ExtensionConfig.ApiKey}");
-            _httpClient.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
+        }
+
+        protected HttpClient GetHttpClient()
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configManager.ExtensionConfig.ApiKey}");
+            client.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
+            return client;
         }
 
         public abstract ValueTask<T> CreateAsync(T data);

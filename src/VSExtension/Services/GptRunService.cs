@@ -12,13 +12,13 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptRunService : BaseEmbeddedGptService<Run, Thread>
     {
-        public GptRunService(ConfigManager configManager) : base(configManager) { }
+        public GptRunService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
 
         public override async ValueTask<Run> CreateAsync(Run data)
         {
             var jsonString = JsonConvert.SerializeObject(data);
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/runs", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/runs", new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -29,7 +29,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<Run> RetrieveAsync(string threadId, string runId)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/{threadId}/runs/${runId}");
+            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/threads/{threadId}/runs/${runId}");
 
             response.EnsureSuccessStatusCode();
 
@@ -42,7 +42,7 @@ namespace Lionence.VSGPT.Services
         {
             var jsonString = JsonConvert.SerializeObject(data);
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/runs", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/runs", new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -53,7 +53,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<ICollection<Run>> ListAsync(string threadId)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/threads/${threadId}/runs");
+            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/threads/${threadId}/runs");
 
             response.EnsureSuccessStatusCode();
 

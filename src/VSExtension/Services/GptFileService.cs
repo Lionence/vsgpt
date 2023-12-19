@@ -11,13 +11,13 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptFileService : BaseGptService<File>
     {
-        public GptFileService(ConfigManager configManager) : base(configManager) { }
+        public GptFileService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
 
         public override async ValueTask<File> CreateAsync(File data)
         {
             var jsonString = JsonConvert.SerializeObject(data);
 
-            var response = await _httpClient.PostAsync("https://api.openai.com/v1/files", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync("https://api.openai.com/v1/files", new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -28,7 +28,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<File> RetrieveAsync(string id)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/files/{id}");
+            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/files/{id}");
 
             response.EnsureSuccessStatusCode();
 
@@ -39,7 +39,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<ICollection<File>> ListAsync()
         {
-            var response = await _httpClient.GetAsync("https://api.openai.com/v1/files/");
+            var response = await GetHttpClient().GetAsync("https://api.openai.com/v1/files/");
 
             response.EnsureSuccessStatusCode();
 
@@ -52,7 +52,7 @@ namespace Lionence.VSGPT.Services
         {
             var jsonString = JsonConvert.SerializeObject(data);
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/files/{data.Id}", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/files/{data.Id}", new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -63,7 +63,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<File> DeleteAsync(string id)
         {
-            var response = await _httpClient.DeleteAsync($"https://api.openai.com/v1/files/{id}");
+            var response = await GetHttpClient().DeleteAsync($"https://api.openai.com/v1/files/{id}");
 
             response.EnsureSuccessStatusCode();
 
@@ -80,7 +80,7 @@ namespace Lionence.VSGPT.Services
                 file = fileContent
             };
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/files", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/files", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -91,7 +91,7 @@ namespace Lionence.VSGPT.Services
 
         public async Task<string> RetrieveFileContentAsync(string id)
         {
-            var response = await _httpClient.GetAsync($"https://api.openai.com/v1/files/{id}/content");
+            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/files/{id}/content");
 
             response.EnsureSuccessStatusCode();
 

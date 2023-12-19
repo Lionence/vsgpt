@@ -12,11 +12,11 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptThreadService : BaseGptService<Thread>
     {
-        public GptThreadService(ConfigManager configManager) : base(configManager) { }
+        public GptThreadService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
 
         public override async ValueTask<Thread> CreateAsync(Thread data)
         {
-            var response = await _httpClient.PostAsync("https://api.openai.com/v1/threads", new StringContent("", Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync("https://api.openai.com/v1/threads", new StringContent("", Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -32,7 +32,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<ICollection<Thread>> ListAsync()
         {
-            var response = await _httpClient.GetAsync("https://api.openai.com/v1/threads/");
+            var response = await GetHttpClient().GetAsync("https://api.openai.com/v1/threads/");
 
             response.EnsureSuccessStatusCode();
 
@@ -48,7 +48,7 @@ namespace Lionence.VSGPT.Services
                 metadata = data.Metadata
             };
 
-            var response = await _httpClient.PostAsync($"https://api.openai.com/v1/threads/{data.Id}", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
+            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.Id}", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -59,7 +59,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<Thread> DeleteAsync(string id)
         {
-            var response = await _httpClient.DeleteAsync($"https://api.openai.com/v1/threads/{id}");
+            var response = await GetHttpClient().DeleteAsync($"https://api.openai.com/v1/threads/{id}");
 
             response.EnsureSuccessStatusCode();
 

@@ -23,7 +23,7 @@ namespace Lionence.VSGPT.Commands
             return new ChatGPTCommand(package, commandService);
         }
 
-        private ChatGPTCommand(AsyncPackage package, OleMenuCommandService commandService)
+        public ChatGPTCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
             _package = package;
 
@@ -39,15 +39,12 @@ namespace Lionence.VSGPT.Commands
             if (Window == null)
             {
                 _package.JoinableTaskFactory.RunAsync(async delegate
-                {
+                {                    
                     Window = (await _package.ShowToolWindowAsync(
                         toolWindowType: typeof(ChatGPTEditorWindow),
                         id: 0,
                         create: true,
                         cancellationToken: _package.DisposalToken)) as ChatGPTEditorWindow;
-                    Window.WorkflowManager = _package.GetService<WorkflowManager, WorkflowManager>();
-                    Window.FileManager = _package.GetService<FileManager, FileManager>();
-                    Window.ConfigManager = _package.GetService<ConfigManager, ConfigManager>();
 
                     if (Window is null || Window.Frame is null)
                     {

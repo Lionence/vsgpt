@@ -5,9 +5,13 @@ using Lionence.VSGPT.Services;
 using Lionence.VSGPT.Services.Core;
 using Lionence.VSGPT.Services.Managers;
 using Lionence.VSGPT.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using System;
+using System.ComponentModel.Design;
 using System.IO;
+using System.IO.Packaging;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,18 +42,20 @@ namespace Lionence.VSGPT
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            _command = await ChatGPTCommand.InitializeAsync(this);
             _dte = await this.GetServiceAsync<DTE, DTE2>();
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
 
-            _assistantService = new GptAssistantService(_configManager);
+            IServiceCollection services = new ServiceCollection();
+            var httpClientFactoy = services.AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
+
+            _assistantService = new GptAssistantService(_configManager, httpClientFactoy);
             AddService(typeof(GptAssistantService), (container, ct, type) => Task.FromResult(_assistantService as object));
-            _messageService = new GptMessageService(_configManager);
+            _messageService = new GptMessageService(_configManager, httpClientFactoy);
             AddService(typeof(GptMessageService), (container, ct, type) => Task.FromResult(_messageService as object));
-            _runService = new GptRunService(_configManager);
+            _runService = new GptRunService(_configManager, httpClientFactoy);
             AddService(typeof(GptRunService), (container, ct, type) => Task.FromResult(_runService as object));
-            _threadService = new GptThreadService(_configManager);
+            _threadService = new GptThreadService(_configManager, httpClientFactoy);
             AddService(typeof(GptThreadService), (container, ct, type) => Task.FromResult(_threadService as object));
             _workflowManager = new WorkflowManager(_configManager, _assistantService, _threadService, _runService, _messageService);
             AddService(typeof(WorkflowManager), (container, ct, type) => Task.FromResult(_workflowManager as object));
@@ -60,6 +66,10 @@ namespace Lionence.VSGPT
 
             _windowEvents = _dte.Events.WindowEvents;
             _windowEvents.WindowActivated += HandleWindowActivated;
+
+            var window = new ChatGPTEditorWindow(_workflowManager, _fileManager, _configManager);
+            AddService(typeof(ChatGPTEditorWindow), (container, ct, type) => Task.FromResult(window as object));
+            _command = await ChatGPTCommand.InitializeAsync(this);
         }
 
         private async void SolutionEvents_Opened()
