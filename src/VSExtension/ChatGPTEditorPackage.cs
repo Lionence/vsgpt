@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Lionence.VSGPT.Commands;
+using Lionence.VSGPT.Models;
 using Lionence.VSGPT.Services;
 using Lionence.VSGPT.Services.Core;
 using Lionence.VSGPT.Services.Managers;
@@ -61,8 +62,13 @@ namespace Lionence.VSGPT
             AddService(typeof(WorkflowManager), (container, ct, type) => Task.FromResult(_workflowManager as object));
 
             _solutionEvents = _dte.Events.SolutionEvents;
-            _solutionEvents.Opened += SolutionEvents_Opened;
-            _solutionEvents.AfterClosing += SolutionEvents_AfterClosing;
+            _solutionEvents.Opened += CreateSolutionSpecificServicesAsync;
+            _solutionEvents.AfterClosing += RemoveSolutionSpecificServices;
+            // Calling 
+            if(_dte.Solution != null)
+            {
+                CreateSolutionSpecificServicesAsync();
+            }
 
             _windowEvents = _dte.Events.WindowEvents;
             _windowEvents.WindowActivated += HandleWindowActivated;
@@ -72,11 +78,10 @@ namespace Lionence.VSGPT
             _command = await ChatGPTCommand.InitializeAsync(this);
         }
 
-        private async void SolutionEvents_Opened()
+        private async void CreateSolutionSpecificServicesAsync()
         {
             // Create new ConfigManager
             _configManager = new ConfigManager(Path.GetDirectoryName(_dte.Solution.FullName));
-            _configManager.Load();
             AddService(typeof(ConfigManager), (container, ct, type) => Task.FromResult(_configManager as object));
             // Create new FileManager
             _fileManager = new FileManager(_configManager, _fileService, _assistantService);
@@ -84,7 +89,7 @@ namespace Lionence.VSGPT
             AddService(typeof(FileManager), (container, ct, type) => Task.FromResult(_fileManager as object));
         }
 
-        private void SolutionEvents_AfterClosing()
+        private void RemoveSolutionSpecificServices()
         {
             RemoveService(typeof(ConfigManager));
             RemoveService(typeof(FileManager));

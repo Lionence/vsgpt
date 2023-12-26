@@ -18,7 +18,7 @@ namespace Lionence.VSGPT.Services.Core
             _configManager = configManager;
         }
 
-        protected HttpClient GetHttpClient()
+        protected HttpClient TryGetHttpClient()
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configManager.ExtensionConfig.ApiKey}");

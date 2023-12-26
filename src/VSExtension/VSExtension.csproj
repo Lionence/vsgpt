@@ -57,6 +57,7 @@
     <Compile Include="Configurations\ExtensionConfig.cs" />
     <Compile Include="Controls\ChatGPTEditorControl.cs" />
     <Compile Include="Controls\Converters\WidthConverter.cs" />
+    <Compile Include="Factories\AssistantFactory.cs" />
     <Compile Include="Models\BuiltIn\Function.cs" />
     <Compile Include="Models\BuiltIn\RequiredAction.cs" />
     <Compile Include="Models\MessageRequest.cs" />

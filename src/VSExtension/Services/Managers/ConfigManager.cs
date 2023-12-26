@@ -31,13 +31,13 @@ namespace Lionence.VSGPT.Services.Managers
             {
                 AssistantConfig = new AssistantConfig()
                 {
-                    ProjectId = new Guid().ToString(),
+                    ProjectId = Guid.NewGuid().ToString(),
                 };
                 File.WriteAllText(assistantConfigFile, JsonConvert.SerializeObject(AssistantConfig));
             }
             else
             {
-                AssistantConfig = JsonConvert.DeserializeObject<AssistantConfig>(assistantConfigFile);
+                AssistantConfig = JsonConvert.DeserializeObject<AssistantConfig>(File.ReadAllText(assistantConfigFile));
             }
 
             if (!File.Exists(extensionConfigFile))
@@ -50,7 +50,7 @@ namespace Lionence.VSGPT.Services.Managers
             }
             else
             {
-                ExtensionConfig = JsonConvert.DeserializeObject<ExtensionConfig>(extensionConfigFile);
+                ExtensionConfig = JsonConvert.DeserializeObject<ExtensionConfig>(File.ReadAllText(extensionConfigFile));
             }
         }
 

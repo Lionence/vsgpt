@@ -25,7 +25,7 @@ namespace Lionence.VSGPT.Services
                 metadata = data.Metadata
             };
 
-            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/messages", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
+            var response = await TryGetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/messages", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -36,7 +36,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<Message> RetrieveAsync(string threadId, string messageId)
         {
-            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/threads/{threadId}/messages/${messageId}");
+            var response = await TryGetHttpClient().GetAsync($"https://api.openai.com/v1/threads/{threadId}/messages/${messageId}");
 
             response.EnsureSuccessStatusCode();
 
@@ -47,7 +47,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<ICollection<Message>> ListAsync(string threadId)
         {
-            var response = await GetHttpClient().GetAsync($"https://api.openai.com/v1/threads/{threadId}/messages");
+            var response = await TryGetHttpClient().GetAsync($"https://api.openai.com/v1/threads/{threadId}/messages");
 
             response.EnsureSuccessStatusCode();
 
@@ -63,7 +63,7 @@ namespace Lionence.VSGPT.Services
                 metadata = data.Metadata
             };
 
-            var response = await GetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/messages/{data.Id}", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
+            var response = await TryGetHttpClient().PostAsync($"https://api.openai.com/v1/threads/{data.ThreadId}/messages/{data.Id}", new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();
 
@@ -74,7 +74,7 @@ namespace Lionence.VSGPT.Services
 
         public override async ValueTask<Message> DeleteAsync(string id)
         {
-            var response = await GetHttpClient().DeleteAsync($"https://api.openai.com/v1/threads/{id}");
+            var response = await TryGetHttpClient().DeleteAsync($"https://api.openai.com/v1/threads/{id}");
 
             response.EnsureSuccessStatusCode();
 

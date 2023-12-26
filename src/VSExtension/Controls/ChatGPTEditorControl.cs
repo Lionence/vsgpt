@@ -22,7 +22,6 @@ namespace Lionence.VSGPT.Control
             _fileManager = fileManager;
             _configManager = configManager;
 
-            _configManager.Load();
             InitializeComponent();
         }
 
