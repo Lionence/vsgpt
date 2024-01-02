@@ -17,42 +17,29 @@ namespace Lionence.VSGPT.Commands
 
         public ChatGPTEditorWindow Window;
 
-        public static async ValueTask<ChatGPTCommand> InitializeAsync(AsyncPackage package)
-        {
-            OleMenuCommandService commandService = await package.GetServiceAsync<IMenuCommandService, OleMenuCommandService>();
-            return new ChatGPTCommand(package, commandService);
-        }
-
         public ChatGPTCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
             _package = package;
 
             var menuCommandID = new CommandID(_CommandSet, CommandId);
-            var menuItem = new MenuCommand(Execute, menuCommandID);
+            var menuItem = new MenuCommand(ExecuteAsync, menuCommandID);
             commandService.AddCommand(menuItem);
-
-            Execute(null, null);
         }
 
-        private void Execute(object sender, EventArgs e)
+        private async void ExecuteAsync(object sender, EventArgs e)
         {
             if (Window == null)
             {
-                _package.JoinableTaskFactory.RunAsync(async delegate
-                {                    
-                    Window = (await _package.ShowToolWindowAsync(
+                Window = (await _package.ShowToolWindowAsync(
                         toolWindowType: typeof(ChatGPTEditorWindow),
                         id: 0,
                         create: true,
                         cancellationToken: _package.DisposalToken)) as ChatGPTEditorWindow;
-
-                    if (Window is null || Window.Frame is null)
-                    {
-                        throw new NotSupportedException("Cannot create tool window");
-                    }
-
-                    _package.AddService(typeof(ChatGPTEditorWindow), (container, ct, type) => Task.FromResult(Window as object));
-                }).Task.Wait();
+               
+                if (Window is null || Window.Frame is null)
+                {
+                    throw new NotSupportedException("Cannot create tool window");
+                }
             }
         }
     }

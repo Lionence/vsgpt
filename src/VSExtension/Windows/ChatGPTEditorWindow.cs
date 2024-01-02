@@ -13,16 +13,12 @@ namespace Lionence.VSGPT.Windows
         public FileManager FileManager { get; set; }
         public ConfigManager ConfigManager { get; set; }
 
-        public ChatGPTEditorWindow(
-            WorkflowManager workflowManager,
-            FileManager fileManager,
-            ConfigManager configManager) : base(null)
+        public ChatGPTEditorWindow() : base(null)
         {
             Caption = "ChatGPT";
-
-            WorkflowManager = workflowManager;
-            FileManager = fileManager;
-            ConfigManager = configManager;
+            WorkflowManager = GetService(typeof(WorkflowManager)) as WorkflowManager;
+            FileManager = GetService(typeof(FileManager)) as FileManager; ;
+            ConfigManager = GetService(typeof(ConfigManager)) as ConfigManager; ;
 
             Content = new ChatGPTEditorControl(WorkflowManager, FileManager, ConfigManager);
         }

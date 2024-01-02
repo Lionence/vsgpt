@@ -31,6 +31,8 @@ namespace Lionence.VSGPT
         private DTE2 _dte;
         private ChatGPTCommand _command; // Bugfix: w/o this GC deletes the command and the extension won't work
 
+        // Lifetime management
+        private ServiceLifetimeManager _serviceLifetimeManager;
         // Dependency injection members
         private GptAssistantService _assistantService { get; set; }
         private GptFileService _fileService { get; set; }
@@ -50,22 +52,19 @@ namespace Lionence.VSGPT
             IServiceCollection services = new ServiceCollection();
             var httpClientFactoy = services.AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
 
-            _assistantService = new GptAssistantService(_configManager, httpClientFactoy);
-            AddService(typeof(GptAssistantService), (container, ct, type) => Task.FromResult(_assistantService as object));
-            _messageService = new GptMessageService(_configManager, httpClientFactoy);
-            AddService(typeof(GptMessageService), (container, ct, type) => Task.FromResult(_messageService as object));
-            _runService = new GptRunService(_configManager, httpClientFactoy);
-            AddService(typeof(GptRunService), (container, ct, type) => Task.FromResult(_runService as object));
-            _threadService = new GptThreadService(_configManager, httpClientFactoy);
-            AddService(typeof(GptThreadService), (container, ct, type) => Task.FromResult(_threadService as object));
-            _workflowManager = new WorkflowManager(_configManager, _assistantService, _threadService, _runService, _messageService);
-            AddService(typeof(WorkflowManager), (container, ct, type) => Task.FromResult(_workflowManager as object));
+            _serviceLifetimeManager = new ServiceLifetimeManager(this);
 
+            _assistantService = _serviceLifetimeManager.Register<GptAssistantService>(_configManager,httpClientFactoy);           
+            _messageService = _serviceLifetimeManager.Register<GptMessageService>(_configManager, httpClientFactoy);
+            _runService = _serviceLifetimeManager.Register<GptRunService>(_configManager, httpClientFactoy);
+            _threadService = _serviceLifetimeManager.Register<GptThreadService>(_configManager, httpClientFactoy);
+            _workflowManager = _serviceLifetimeManager.Register<WorkflowManager>(_configManager, _assistantService, _threadService, _runService, _messageService);
+            
             _solutionEvents = _dte.Events.SolutionEvents;
             _solutionEvents.Opened += CreateSolutionSpecificServicesAsync;
             _solutionEvents.AfterClosing += RemoveSolutionSpecificServices;
-            // Calling 
-            if(_dte.Solution != null)
+            
+            if(!string.IsNullOrEmpty(_dte.Solution?.FullName))
             {
                 CreateSolutionSpecificServicesAsync();
             }
@@ -73,26 +72,9 @@ namespace Lionence.VSGPT
             _windowEvents = _dte.Events.WindowEvents;
             _windowEvents.WindowActivated += HandleWindowActivated;
 
-            var window = new ChatGPTEditorWindow(_workflowManager, _fileManager, _configManager);
-            AddService(typeof(ChatGPTEditorWindow), (container, ct, type) => Task.FromResult(window as object));
-            _command = await ChatGPTCommand.InitializeAsync(this);
-        }
-
-        private async void CreateSolutionSpecificServicesAsync()
-        {
-            // Create new ConfigManager
-            _configManager = new ConfigManager(Path.GetDirectoryName(_dte.Solution.FullName));
-            AddService(typeof(ConfigManager), (container, ct, type) => Task.FromResult(_configManager as object));
-            // Create new FileManager
-            _fileManager = new FileManager(_configManager, _fileService, _assistantService);
-            await _fileManager.InitializeAsync(await _assistantService.RetrieveAsync(_configManager.AssistantConfig.AssistantId));
-            AddService(typeof(FileManager), (container, ct, type) => Task.FromResult(_fileManager as object));
-        }
-
-        private void RemoveSolutionSpecificServices()
-        {
-            RemoveService(typeof(ConfigManager));
-            RemoveService(typeof(FileManager));
+            var window = _serviceLifetimeManager.Register<ChatGPTEditorWindow>();
+            _command = new ChatGPTCommand(this,
+                GetService(typeof(IMenuCommandService)) as OleMenuCommandService);
         }
 
         private void HandleWindowActivated(Window windowInFocus, Window windowLostFocus)
