@@ -12,7 +12,7 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptRunService : BaseEmbeddedGptService<Run, Thread>
     {
-        public GptRunService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
+        public GptRunService(ServiceLifetimeManager serviceLifetimeManager) : base(serviceLifetimeManager) { }
 
         public override async ValueTask<Run> CreateAsync(Run data)
         {

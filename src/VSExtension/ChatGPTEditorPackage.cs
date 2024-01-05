@@ -1,9 +1,7 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Lionence.VSGPT.Commands;
-using Lionence.VSGPT.Models;
 using Lionence.VSGPT.Services;
-using Lionence.VSGPT.Services.Core;
 using Lionence.VSGPT.Services.Managers;
 using Lionence.VSGPT.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +9,6 @@ using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using System.IO;
-using System.IO.Packaging;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -33,48 +30,62 @@ namespace Lionence.VSGPT
 
         // Lifetime management
         private ServiceLifetimeManager _serviceLifetimeManager;
-        // Dependency injection members
-        private GptAssistantService _assistantService { get; set; }
-        private GptFileService _fileService { get; set; }
-        private GptMessageService _messageService { get; set; }
-        private GptRunService _runService { get; set; }
-        private GptThreadService _threadService { get; set; }
-        private ConfigManager _configManager { get; set; }
-        private FileManager _fileManager { get; set; }
-        private WorkflowManager _workflowManager { get; set; }
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            // Register base components
             _dte = await this.GetServiceAsync<DTE, DTE2>();
-
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
-
-            IServiceCollection services = new ServiceCollection();
-            var httpClientFactoy = services.AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
-
             _serviceLifetimeManager = new ServiceLifetimeManager(this);
 
-            _assistantService = _serviceLifetimeManager.Register<GptAssistantService>(_configManager,httpClientFactoy);           
-            _messageService = _serviceLifetimeManager.Register<GptMessageService>(_configManager, httpClientFactoy);
-            _runService = _serviceLifetimeManager.Register<GptRunService>(_configManager, httpClientFactoy);
-            _threadService = _serviceLifetimeManager.Register<GptThreadService>(_configManager, httpClientFactoy);
-            _workflowManager = _serviceLifetimeManager.Register<WorkflowManager>(_configManager, _assistantService, _threadService, _runService, _messageService);
+            // Register non-changing components
+            IServiceCollection services = new ServiceCollection();
+            var httpClientFactoy = services.AddHttpClient().BuildServiceProvider().GetService<IHttpClientFactory>();
+            _serviceLifetimeManager.Register(httpClientFactoy);
+
+            // Register solution specific components
+            if (!string.IsNullOrEmpty(_dte.Solution?.FullName))
+            {
+                _serviceLifetimeManager.Register(new ConfigManager(Path.GetDirectoryName(_dte.Solution.FullName)));
+            }
+        
+            // Register dynamic components
+            await _serviceLifetimeManager.RegisterAsync<GptAssistantService>();
+            await _serviceLifetimeManager.RegisterAsync<GptThreadService>();
+            await _serviceLifetimeManager.RegisterAsync<GptRunService>();
+            await _serviceLifetimeManager.RegisterAsync<GptMessageService>();
+            await _serviceLifetimeManager.RegisterAsync<GptFileService>();
+            await _serviceLifetimeManager.RegisterAsync<WorkflowManager>();
             
+            // Solution events
             _solutionEvents = _dte.Events.SolutionEvents;
-            _solutionEvents.Opened += CreateSolutionSpecificServicesAsync;
+            _solutionEvents.Opened += CreateSolutionSpecificServices;
             _solutionEvents.AfterClosing += RemoveSolutionSpecificServices;
             
-            if(!string.IsNullOrEmpty(_dte.Solution?.FullName))
-            {
-                CreateSolutionSpecificServicesAsync();
-            }
-
+            // Window events
             _windowEvents = _dte.Events.WindowEvents;
             _windowEvents.WindowActivated += HandleWindowActivated;
 
-            var window = _serviceLifetimeManager.Register<ChatGPTEditorWindow>();
-            _command = new ChatGPTCommand(this,
-                GetService(typeof(IMenuCommandService)) as OleMenuCommandService);
+            // Register tool window
+            if(!_serviceLifetimeManager.TryGet<ChatGPTEditorWindow>(out _))
+            {
+                _serviceLifetimeManager.Register(Activator.CreateInstance<ChatGPTEditorWindow>());
+            }
+
+            // Register command
+            _command = new ChatGPTCommand(this, GetService(typeof(IMenuCommandService)) as OleMenuCommandService);
+        }
+
+        private async void CreateSolutionSpecificServices()
+        {
+            _serviceLifetimeManager.Register(new ConfigManager(Path.GetDirectoryName(_dte.Solution.FullName)));
+            await _serviceLifetimeManager.RegisterAsync<FileManager>();
+        }
+
+        private void RemoveSolutionSpecificServices()
+        {
+            _serviceLifetimeManager.Remove<ConfigManager>();
+            _serviceLifetimeManager.Remove<FileManager>();
         }
 
         private void HandleWindowActivated(Window windowInFocus, Window windowLostFocus)

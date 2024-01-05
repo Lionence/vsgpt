@@ -9,19 +9,22 @@ namespace Lionence.VSGPT.Services.Core
         where TObject : class, new()
         where TParent : class, new()
     {
-        protected readonly IHttpClientFactory _httpClientFactory;
-        protected readonly ConfigManager _configManager;
+        private readonly ServiceLifetimeManager _serviceLifetimeManage;
 
-        public BaseEmbeddedGptService(ConfigManager configManager, IHttpClientFactory httpClientFactory)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        protected ConfigManager ConfigManager => _serviceLifetimeManage.Get<ConfigManager>();
+
+        public BaseEmbeddedGptService(ServiceLifetimeManager serviceLifetimeManager)
         {
-            _httpClientFactory = httpClientFactory;
-            _configManager = configManager;
+            _serviceLifetimeManage = serviceLifetimeManager;
+            _httpClientFactory = serviceLifetimeManager.Get<IHttpClientFactory>();
         }
 
         protected HttpClient TryGetHttpClient()
         {
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configManager.ExtensionConfig.ApiKey}");
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {ConfigManager.ExtensionConfig.ApiKey}");
             client.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
             return client;
         }

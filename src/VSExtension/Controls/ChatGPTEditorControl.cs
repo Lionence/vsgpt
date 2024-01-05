@@ -6,22 +6,16 @@ namespace Lionence.VSGPT.Control
 {
     public sealed partial class ChatGPTEditorControl : UserControl
     {
-        private readonly WorkflowManager _workflowManager;
-        private readonly FileManager _fileManager;
-        private readonly ConfigManager _configManager;
+        private WorkflowManager WorkflowManager => ServiceLifetimeManager.Instance.Value.Get<WorkflowManager>();
+        private FileManager FileManager => ServiceLifetimeManager.Instance.Value.Get<FileManager>();
+        private ConfigManager ConfigManager => ServiceLifetimeManager.Instance.Value.Get<ConfigManager>();
 
         private string FileContent { get; set; } = string.Empty;
         private string FileName { get; set; } = string.Empty;
         private string RelativePath { get; set; } = string.Empty;
 
-        public ChatGPTEditorControl(WorkflowManager workflowManager,
-                                   FileManager fileManager,
-                                   ConfigManager configManager)
+        public ChatGPTEditorControl()
         {
-            _workflowManager = workflowManager;
-            _fileManager = fileManager;
-            _configManager = configManager;
-
             InitializeComponent();
         }
 

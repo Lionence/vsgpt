@@ -12,7 +12,7 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptThreadService : BaseGptService<Thread>
     {
-        public GptThreadService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
+        public GptThreadService(ServiceLifetimeManager serviceLifetimeManager) : base(serviceLifetimeManager) { }
 
         public override async ValueTask<Thread> CreateAsync(Thread data)
         {

@@ -7,29 +7,22 @@ namespace Lionence.VSGPT.Services.Managers
 {
     public sealed class WorkflowManager
     {
-        private readonly ConfigManager _configManager;
-        private readonly GptAssistantService _assistantService;
-        private readonly GptThreadService _threadService;
-        private readonly GptRunService _runService;
-        private readonly GptMessageService _messageService;
+        private readonly ServiceLifetimeManager _serviceLifetimeManager;
 
-        public WorkflowManager(
-            ConfigManager configManager,
-            GptAssistantService assistantService,
-            GptThreadService threadService,
-            GptRunService runService,
-            GptMessageService messageService)
+        private ConfigManager ConfigManager => _serviceLifetimeManager.Get<ConfigManager>();
+        private GptAssistantService AssistantService => _serviceLifetimeManager.Get<GptAssistantService>();
+        private GptThreadService ThreadService => _serviceLifetimeManager.Get<GptThreadService>();
+        private GptRunService RunService => _serviceLifetimeManager.Get<GptRunService>();
+        private GptMessageService MessageService => _serviceLifetimeManager.Get<GptMessageService>();
+
+        public WorkflowManager(ServiceLifetimeManager serviceLifetimeManager)
         {
-            _configManager = configManager;
-            _assistantService = assistantService;
-            _threadService = threadService;
-            _runService = runService;
-            _messageService = messageService;
+            _serviceLifetimeManager = serviceLifetimeManager;
         }
 
         public async ValueTask<Assistant> CreateOrRetrieveAssistantAsync()
         {
-            var assistant = await _assistantService.RetrieveAsync(_configManager.AssistantConfig.AssistantId) ?? await _assistantService.CreateAsync(new Assistant()
+            var assistant = await AssistantService.RetrieveAsync(ConfigManager.AssistantConfig.AssistantId) ?? await AssistantService.CreateAsync(new Assistant()
                 {
                     Name = "VSGPT",
                     Description = "c68c145d-b93a-4af3-8a98-f689efab069e (don't modify)",
@@ -52,7 +45,7 @@ namespace Lionence.VSGPT.Services.Managers
                         "The last line instructs you to output the modified content and only that, only code. This makes sure you don't forget the instructions.",
                     Metadata = new Dictionary<string, string>
                     {
-                        { "purpose", "vsgpt" }, { "project", _configManager.AssistantConfig.ProjectId },
+                        { "purpose", "vsgpt" }, { "project", ConfigManager.AssistantConfig.ProjectId },
                     }
                 });
             return assistant;
@@ -60,11 +53,11 @@ namespace Lionence.VSGPT.Services.Managers
 
         public async ValueTask<Thread> CreateOrRetrieveThreadAsync()
         {
-            var thread = await _threadService.RetrieveAsync(_configManager.AssistantConfig.ThreadId) ?? await _threadService.CreateAsync(new Thread()
+            var thread = await ThreadService.RetrieveAsync(ConfigManager.AssistantConfig.ThreadId) ?? await ThreadService.CreateAsync(new Thread()
                 {
                     Metadata = new Dictionary<string, string>
                     {
-                        { "purpose", "vsgpt" }, { "project", _configManager.AssistantConfig.ProjectId },
+                        { "purpose", "vsgpt" }, { "project", ConfigManager.AssistantConfig.ProjectId },
                     }
                 });
             return thread;
@@ -73,18 +66,18 @@ namespace Lionence.VSGPT.Services.Managers
         public async ValueTask<string> RequestAsync(string fileId, string request)
         {
             // Put message on the thread
-            await _messageService.CreateAsync(new MessageRequest()
+            await MessageService.CreateAsync(new MessageRequest()
             {
-                ThreadId = _configManager.AssistantConfig.ThreadId,
+                ThreadId = ConfigManager.AssistantConfig.ThreadId,
                 Content = $"Open file {fileId} and make modifications following the instruction:\n{request}\noutput the entire updated content, only this file and only give me code",
                 Role = "user",
             });
 
             // Run the thread
-            var run = await _runService.CreateAsync(new Run()
+            var run = await RunService.CreateAsync(new Run()
             {
-                ThreadId = _configManager.AssistantConfig.ThreadId,
-                AssistantId = _configManager.AssistantConfig.AssistantId
+                ThreadId = ConfigManager.AssistantConfig.ThreadId,
+                AssistantId = ConfigManager.AssistantConfig.AssistantId
             });
             var runId = run.Id;
 
@@ -92,11 +85,11 @@ namespace Lionence.VSGPT.Services.Managers
             while(run.Status == "queued")
             {
                 System.Threading.Thread.Sleep(500);
-                run = await _runService.RetrieveAsync(_configManager.AssistantConfig.ThreadId, runId);
+                run = await RunService.RetrieveAsync(ConfigManager.AssistantConfig.ThreadId, runId);
             }
 
             // Return the response
-            var response = (await _messageService.ListAsync(_configManager.AssistantConfig.ThreadId)).OrderByDescending(m => m.CreatedAt).First().Content[0].Text;
+            var response = (await MessageService.ListAsync(ConfigManager.AssistantConfig.ThreadId)).OrderByDescending(m => m.CreatedAt).First().Content[0].Text;
             return response.ToString();
         }
     }

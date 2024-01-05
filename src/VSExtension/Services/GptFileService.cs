@@ -11,7 +11,7 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptFileService : BaseGptService<File>
     {
-        public GptFileService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
+        public GptFileService(ServiceLifetimeManager serviceLifetimeManager) : base(serviceLifetimeManager) { }
 
         public override async ValueTask<File> CreateAsync(File data)
         {

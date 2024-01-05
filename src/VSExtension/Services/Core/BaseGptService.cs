@@ -1,6 +1,5 @@
 ﻿using Lionence.VSGPT.Services.Managers;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -9,19 +8,22 @@ namespace Lionence.VSGPT.Services.Core
     public abstract class BaseGptService<T> : IGptService
         where T : class, new()
     {
-        protected readonly IHttpClientFactory _httpClientFactory;
-        protected readonly ConfigManager _configManager;
+        private readonly ServiceLifetimeManager _serviceLifetimeManage;
 
-        public BaseGptService(ConfigManager configManager, IHttpClientFactory httpClientFactory)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        protected ConfigManager ConfigManager => _serviceLifetimeManage.Get<ConfigManager>();
+
+        public BaseGptService(ServiceLifetimeManager serviceLifetimeManager)
         {
-            _httpClientFactory = httpClientFactory;
-            _configManager = configManager;
+            _serviceLifetimeManage = serviceLifetimeManager;
+            _httpClientFactory = serviceLifetimeManager.Get<IHttpClientFactory>();
         }
 
         protected HttpClient GetHttpClient()
         {
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configManager.ExtensionConfig.ApiKey}");
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {ConfigManager.ExtensionConfig.ApiKey}");
             client.DefaultRequestHeaders.Add("OpenAI-Beta", "assistants=v1");
             return client;
         }

@@ -7,34 +7,31 @@ namespace Lionence.VSGPT.Services.Managers
 {
     public class FileManager
     {
-        private readonly ConfigManager _configManager;
-        private readonly GptFileService _fileService;
-        private readonly GptAssistantService _assistantService;
+        private readonly ServiceLifetimeManager _serviceLifetimeManager;
         private ICollection<File> _localFiles = new List<File>();
 
-        public FileManager(
-            ConfigManager configManager,
-            GptFileService fileService,
-            GptAssistantService assistantService)
+        private ConfigManager ConfigManager => _serviceLifetimeManager.Get<ConfigManager>();
+        private GptFileService FileService => _serviceLifetimeManager.Get<GptFileService>();
+        private GptAssistantService AssistantService => _serviceLifetimeManager.Get<GptAssistantService>();
+
+        public FileManager(ServiceLifetimeManager serviceLifetimeManager)
         {
-            _configManager = configManager;
-            _fileService = fileService;
-            _assistantService = assistantService;
+            _serviceLifetimeManager = serviceLifetimeManager;
         }
 
         public async Task InitializeAsync(Assistant assistant)
         {
-            _localFiles = (await _fileService.ListAsync()).Where(serverFile => assistant.FileIds.Contains(serverFile.Id)).ToList();
+            _localFiles = (await FileService.ListAsync()).Where(serverFile => assistant.FileIds.Contains(serverFile.Id)).ToList();
         }
 
         public async Task SynchronizeFilesAsync(Assistant assistant)
         {
-            var assistantFiles = (await _fileService.ListAsync()).Where(serverFile => assistant.FileIds.Contains(serverFile.Id)).ToList();
+            var assistantFiles = (await FileService.ListAsync()).Where(serverFile => assistant.FileIds.Contains(serverFile.Id)).ToList();
 
             // Upload new files
             var newFiles = await Task.WhenAll(
                 _localFiles.Where(localFile => !assistant.FileIds.Contains(localFile.Id))
-                    .Select(f => _fileService.CreateAsync(f))
+                    .Select(f => FileService.CreateAsync(f))
                     .Select(vt => vt.AsTask()));
 
             // Update existing files
@@ -42,13 +39,13 @@ namespace Lionence.VSGPT.Services.Managers
                 .Where(localFile => assistantFiles
                     .Any(serverFile => localFile.Filename == serverFile.Filename
                                     && localFile.CreatedAt > serverFile.CreatedAt));
-            await Task.WhenAll(updatedFiles.Select(f => _fileService.DeleteAsync(f.Id)).Select(vt => vt.AsTask()));
-            updatedFiles = await Task.WhenAll(updatedFiles.Select(f => _fileService.CreateAsync(f)).Select(vt => vt.AsTask()));
+            await Task.WhenAll(updatedFiles.Select(f => FileService.DeleteAsync(f.Id)).Select(vt => vt.AsTask()));
+            updatedFiles = await Task.WhenAll(updatedFiles.Select(f => FileService.CreateAsync(f)).Select(vt => vt.AsTask()));
 
             // Unsync deleted files
             var deletedFiles = await Task.WhenAll(
                 assistantFiles.Where(serverFile => !_localFiles.Any(localFile => localFile.Id == serverFile.Id))
-                    .Select(file => _fileService.DeleteAsync(file.Id))
+                    .Select(file => FileService.DeleteAsync(file.Id))
                     .Select(vt => vt.AsTask()));
 
             // Update assistant
@@ -59,9 +56,9 @@ namespace Lionence.VSGPT.Services.Managers
                 assistantFiles.RemoveRange(0, assistantFiles.Count - 20);
             }
             assistant.FileIds = assistantFiles.Select(f => f.Id).ToList();
-            await _assistantService.ModifyAsync(assistant);
+            await AssistantService.ModifyAsync(assistant);
 
-            _configManager.AssistantConfig.AttachedFiles = assistant.FileIds;
+            ConfigManager.AssistantConfig.AttachedFiles = assistant.FileIds;
         }
 
         public void FileOpened(string filePath)

@@ -12,7 +12,7 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptMessageService : BaseEmbeddedGptService<Message, Thread>, IMessageService
     {
-        public GptMessageService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
+        public GptMessageService(ServiceLifetimeManager serviceLifetimeManager) : base(serviceLifetimeManager) { }
 
 
         public async ValueTask<Message> CreateAsync(MessageRequest data)

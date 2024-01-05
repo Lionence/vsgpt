@@ -11,7 +11,7 @@ namespace Lionence.VSGPT.Services
 {
     public sealed class GptAssistantService : BaseGptService<Assistant>
     {
-        public GptAssistantService(ConfigManager configManager, IHttpClientFactory httpClientFactory) : base(configManager, httpClientFactory) { }
+        public GptAssistantService(ServiceLifetimeManager serviceLifetimeManager) : base(serviceLifetimeManager) { }
 
         public override async ValueTask<Assistant> CreateAsync(Assistant data)
         {
